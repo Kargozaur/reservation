@@ -6,5 +6,5 @@ type User struct {
 	Password  string
 	FirstName string
 	LastName  string
-	Token     []RefreshToken `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Token     []RefreshToken `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
