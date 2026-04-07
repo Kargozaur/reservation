@@ -9,11 +9,11 @@ import (
 )
 
 type JWT struct {
-	secret []byte
+	Secret []byte
 }
 
 func NewJWT() *JWT {
-	return &JWT{secret: []byte(os.Getenv("SECRET_KEY"))}
+	return &JWT{Secret: []byte(os.Getenv("SECRET_KEY"))}
 }
 
 func (j *JWT) CreateAccessToken(userID uuid.UUID) (string, error) {
@@ -23,7 +23,7 @@ func (j *JWT) CreateAccessToken(userID uuid.UUID) (string, error) {
 		"exp": time.Now().UTC().Add(time.Minute * 15).Unix(),
 		"iss": "user-service",
 	})
-	tokenString, err := token.SignedString(j.secret)
+	tokenString, err := token.SignedString(j.Secret)
 	if err != nil {
 		return "", err
 	}
@@ -37,7 +37,7 @@ func (j *JWT) CreateRefreshToken(userID uuid.UUID) (string, error) {
 		"exp": time.Now().UTC().Add(time.Hour * 24 * 7).Unix(),
 		"iss": "user-service",
 	})
-	tokenString, err := token.SignedString(j.secret)
+	tokenString, err := token.SignedString(j.Secret)
 	if err != nil {
 		return "", err
 	}
@@ -49,17 +49,20 @@ func (j *JWT) VerifyToken(tokenString string) bool {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
-		return j.secret, nil
+		return j.Secret, nil
 	})
-	return token.Valid && err == nil
+	if err != nil {
+		return false
+	}
+	return token.Valid
 }
 
-func (j *JWT) GetId(tokenString string) (uuid.UUID, error) {
+func (j *JWT) GetUId(tokenString string) (uuid.UUID, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, jwt.ErrSignatureInvalid
 		}
-		return j.secret, nil
+		return j.Secret, nil
 	})
 	if err != nil {
 		return uuid.Nil, err
