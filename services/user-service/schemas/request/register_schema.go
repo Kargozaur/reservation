@@ -17,3 +17,7 @@ func (r *RegisterSchema) ToUserModel() *models.User {
 		LastName:  r.LastName,
 	}
 }
+
+func (r *RegisterSchema) SwapPassword(password string) {
+	r.Password = password
+}

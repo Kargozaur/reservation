@@ -1,17 +1,17 @@
 package user
 
 import (
+	"user-service/models"
 	"user-service/schemas/request"
-	"user-service/schemas/response"
 
 	"github.com/google/uuid"
 )
 
 type IUserRepository interface {
-	CreateUser(request.RegisterSchema) (response.UserResponse, error)
-	FindUserByEmail(email string) (response.UserResponse, error)
-	FindUserById(id uuid.UUID) (response.UserResponse, error)
-	UpdateUserName(id uuid.UUID, name request.UpdateNameSchema) (response.UserResponse, error)
-	UpdateUserEmail(id uuid.UUID, email request.UpdateEmailSchema) (response.UserResponse, error)
-	UpdateUserPassword(id uuid.UUID, password request.UpdatePasswordSchema) (response.UserResponse, error)
+	CreateUser(request.RegisterSchema) (*models.User, error)
+	FindUserByEmail(email string) (*models.User, error)
+	FindUserById(id uuid.UUID) (*models.User, error)
+	UpdateUserName(id uuid.UUID, name request.UpdateNameSchema) (*models.User, error)
+	UpdateUserEmail(id uuid.UUID, email request.UpdateEmailSchema) (*models.User, error)
+	UpdateUserPassword(id uuid.UUID, password request.UpdatePasswordSchema) (*models.User, error)
 }
