@@ -7,12 +7,11 @@ type UpdateNameSchema struct {
 	LastName  *string `json:"lastName,omitempty"`
 }
 
-func (s *UpdateNameSchema) ToUserModel(user *models.User) *models.User {
+func (s *UpdateNameSchema) ToUserModel(user *models.User) {
 	if s.FirstName != nil {
 		user.FirstName = *s.FirstName
 	}
 	if s.LastName != nil {
 		user.LastName = *s.LastName
 	}
-	return user
 }
