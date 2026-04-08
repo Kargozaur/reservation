@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type UserHandler struct {
@@ -107,6 +108,10 @@ func (c *UserHandler) UpdateEmail() gin.HandlerFunc {
 		if err := c.service.UpdateEmail(cookie, updateEmail); err != nil {
 			if errors.Is(err, jwt.ErrTokenExpired) {
 				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
+				return
+			}
+			if errors.Is(err, gorm.ErrDuplicatedKey) {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "email already exists"})
 				return
 			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
