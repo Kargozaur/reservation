@@ -8,13 +8,13 @@ import (
 )
 
 func RequestTime(logger *slog.Logger) gin.HandlerFunc {
-	return func(c *gin.Context) {
+	return func(ctx *gin.Context) {
 		start := time.Now()
-		c.Next()
-		logger.InfoContext(c.Request.Context(), "request_time",
-			"method", c.Request.Method,
-			"path", c.Request.URL.Path,
-			"status", c.Writer.Status(),
+		ctx.Next()
+		logger.InfoContext(ctx.Request.Context(), "request_time",
+			"method", ctx.Request.Method,
+			"path", ctx.Request.URL.Path,
+			"status", ctx.Writer.Status(),
 			"duration", time.Since(start).String(),
 		)
 	}

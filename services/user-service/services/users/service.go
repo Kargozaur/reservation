@@ -8,8 +8,6 @@ import (
 	"user-service/schemas/request"
 	"user-service/schemas/response"
 	"user-service/validators/credential"
-
-	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -72,7 +70,11 @@ func (s *UserService) LoginUser(loginRequest request.LoginSchema) (string, strin
 	return accessToken, refreshToken, nil
 }
 
-func (s *UserService) GetUser(id uuid.UUID) (response.UserResponse, error) {
+func (s *UserService) GetUser(tokenString string) (response.UserResponse, error) {
+	id, err := s.jwt.GetUId(tokenString)
+	if err != nil {
+		return response.UserResponse{}, err
+	}
 	user, err := s.repo.FindUserById(id)
 	if err != nil {
 		return response.UserResponse{}, err
@@ -80,26 +82,35 @@ func (s *UserService) GetUser(id uuid.UUID) (response.UserResponse, error) {
 	return response.ToUserResponse(user), nil
 }
 
-func (s *UserService) UpdateName(id uuid.UUID, updateRequest request.UpdateNameSchema) (response.UserResponse, error) {
-	user, err := s.repo.UpdateUserName(id, updateRequest)
+func (s *UserService) UpdateName(tokenString string, updateRequest request.UpdateNameSchema) error {
+	id, err := s.jwt.GetUId(tokenString)
 	if err != nil {
-		return response.UserResponse{}, err
+		return err
 	}
-	return response.ToUserResponse(user), nil
+	if err = s.repo.UpdateUserName(id, updateRequest); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (s *UserService) UpdateEmail(id uuid.UUID, updateRequest request.UpdateEmailSchema) (response.UserResponse, error) {
-	user, err := s.repo.UpdateUserEmail(id, updateRequest)
+func (s *UserService) UpdateEmail(tokenString string, updateRequest request.UpdateEmailSchema) error {
+	id, err := s.jwt.GetUId(tokenString)
 	if err != nil {
-		return response.UserResponse{}, err
+		return err
 	}
-	return response.ToUserResponse(user), nil
+	if err = s.repo.UpdateUserEmail(id, updateRequest); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (s *UserService) UpdatePassword(id uuid.UUID, updateRequest request.UpdatePasswordSchema) (response.UserResponse, error) {
-	user, err := s.repo.UpdateUserPassword(id, updateRequest)
+func (s *UserService) UpdatePassword(tokenString string, updateRequest request.UpdatePasswordSchema) error {
+	id, err := s.jwt.GetUId(tokenString)
 	if err != nil {
-		return response.UserResponse{}, err
+		return err
 	}
-	return response.ToUserResponse(user), nil
+	if err = s.repo.UpdateUserPassword(id, updateRequest); err != nil {
+		return err
+	}
+	return nil
 }

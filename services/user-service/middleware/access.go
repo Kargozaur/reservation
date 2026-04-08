@@ -8,14 +8,14 @@ import (
 )
 
 func VerifyAccess(logger *slog.Logger) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		_, err := c.Cookie("access_token")
+	return func(ctx *gin.Context) {
+		_, err := ctx.Cookie("access_token")
 		if err != nil {
 			logger.Error("Failed to get access token cookie: " + err.Error())
-			c.AbortWithStatus(http.StatusUnauthorized)
+			ctx.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
-		c.Next()
 		logger.Info("User have access token")
+		ctx.Next()
 	}
 }
