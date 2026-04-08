@@ -98,6 +98,9 @@ func (s *UserService) UpdateEmail(tokenString string, updateRequest request.Upda
 	if err != nil {
 		return err
 	}
+	if err = s.validate.ValidateEmail(updateRequest.Email); err != nil {
+		return err
+	}
 	if err = s.repo.UpdateUserEmail(id, updateRequest); err != nil {
 		return err
 	}
@@ -109,6 +112,14 @@ func (s *UserService) UpdatePassword(tokenString string, updateRequest request.U
 	if err != nil {
 		return err
 	}
+	if errs := s.validate.ValidatePassword(updateRequest.Password); len(errs) > 0 {
+		return errors.Join(errs...)
+	}
+	hash, err := s.phasher.Hash(updateRequest.Password)
+	if err != nil {
+		return err
+	}
+	updateRequest.SwapPassword(hash)
 	if err = s.repo.UpdateUserPassword(id, updateRequest); err != nil {
 		return err
 	}

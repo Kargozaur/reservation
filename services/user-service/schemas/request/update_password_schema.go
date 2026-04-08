@@ -9,3 +9,7 @@ type UpdatePasswordSchema struct {
 func (u *UpdatePasswordSchema) ToUserModel(user *models.User) {
 	user.Password = u.Password
 }
+
+func (u *UpdatePasswordSchema) SwapPassword(password string) {
+	u.Password = password
+}
