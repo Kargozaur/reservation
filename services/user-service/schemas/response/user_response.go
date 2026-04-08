@@ -13,8 +13,8 @@ type UserResponse struct {
 	LastName  string    `json:"lastName"`
 }
 
-func ToUserResponse(user *models.User) *UserResponse {
-	return &UserResponse{
+func ToUserResponse(user *models.User) UserResponse {
+	return UserResponse{
 		ID:        user.ID,
 		Email:     user.Email,
 		FirstName: user.FirstName,
