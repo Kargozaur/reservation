@@ -1,7 +1,7 @@
 package credential
 
 import (
-	"fmt"
+	"errors"
 	"net/mail"
 	"unicode"
 )
@@ -20,7 +20,7 @@ func (v *Validator) ValidatePassword(password string) []error {
 	var res []error
 	var isSpecial, isUpper, isDigit bool
 	if len(password) < 8 {
-		res = append(res, fmt.Errorf("Password must be at least 8 characters"))
+		res = append(res, errors.New("Password must be at least 8 characters."))
 	}
 	for _, ch := range password {
 		switch {
@@ -33,13 +33,13 @@ func (v *Validator) ValidatePassword(password string) []error {
 		}
 	}
 	if !isDigit {
-		res = append(res, fmt.Errorf("Password must contain at least one digit"))
+		res = append(res, errors.New("Password must contain at least one digit."))
 	}
 	if !isUpper {
-		res = append(res, fmt.Errorf("Password must contain at least one uppercase letter"))
+		res = append(res, errors.New("Password must contain at least one uppercase letter."))
 	}
 	if !isSpecial {
-		res = append(res, fmt.Errorf("Password must contain at least one special character"))
+		res = append(res, errors.New("Password must contain at least one special character."))
 	}
 	return res
 }
