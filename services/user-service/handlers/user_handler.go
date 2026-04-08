@@ -62,6 +62,10 @@ func (c *UserHandler) GetUser() gin.HandlerFunc {
 		}
 		user, err := c.service.GetUser(cookie)
 		if err != nil {
+			if errors.Is(err, jwt.ErrTokenExpired) {
+				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
+				return
+			}
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
@@ -86,7 +90,11 @@ func (c *UserHandler) UpdateName() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdateName(cookie, updateName); err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			if errors.Is(err, jwt.ErrTokenExpired) {
+				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
+				return
+			}
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"message": "name updated"})
