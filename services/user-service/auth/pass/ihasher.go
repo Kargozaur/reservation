@@ -2,5 +2,5 @@ package pass
 
 type IPwdHasher interface {
 	Hash(password string) (string, error)
-	VerifyPwd(password string, hash []byte) error
+	Verify(password string, hash []byte) error
 }

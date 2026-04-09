@@ -59,7 +59,7 @@ func (s *UserService) LoginUser(loginRequest request.LoginSchema) (string, strin
 	if err != nil {
 		return "", "", err
 	}
-	if err := s.phasher.VerifyPwd(loginRequest.Password, []byte(user.Password)); err != nil {
+	if err := s.phasher.Verify(loginRequest.Password, []byte(user.Password)); err != nil {
 		return "", "", err
 	}
 	accessToken, err := s.jwt.CreateAccessToken(user.ID)

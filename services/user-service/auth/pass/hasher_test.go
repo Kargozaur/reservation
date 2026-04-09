@@ -20,7 +20,7 @@ func TestHasher(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if err := hasher.Verify(tt.password, hash); err != nil {
+			if err := hasher.Verify(tt.password, []byte(hash)); err != nil {
 				t.Fatal(err)
 			}
 		})

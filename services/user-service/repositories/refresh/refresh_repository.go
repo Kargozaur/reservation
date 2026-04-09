@@ -16,7 +16,7 @@ func NewRefreshRepository(db *gorm.DB) *RefreshRepository {
 	return &RefreshRepository{db: db}
 }
 
-func (r *RefreshRepository) SaveRefreshToken(refreshToken string, userId uuid.UUID) error {
+func (r *RefreshRepository) SaveRefreshToken(userId uuid.UUID, refreshToken string) error {
 	hash := sha256.New()
 	hash.Write([]byte(refreshToken))
 	return r.db.Create(models.RefreshToken{Token: string(hash.Sum(nil)), UserID: userId}).Error
@@ -34,7 +34,7 @@ func (r *RefreshRepository) DeleteAllUserTokens(userId uuid.UUID) error {
 	return r.db.Delete(&models.RefreshToken{}, "user_id = ?", userId).Error
 }
 
-func (r *RefreshRepository) DeleteToken(tokenString string) error {
+func (r *RefreshRepository) DeleteRefreshToken(tokenString string) error {
 	hash := sha256.New()
 	hash.Write([]byte(tokenString))
 	return r.db.Delete(&models.RefreshToken{}, "token = ?", string(hash.Sum(nil))).Error

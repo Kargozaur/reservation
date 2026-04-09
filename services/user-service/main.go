@@ -5,6 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"user-service/conf"
+	"user-service/controller"
 	"user-service/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -34,5 +36,8 @@ func main() {
 			"message": "pong",
 		})
 	})
+	db := conf.NewDBConf()
+	api := r.Group("/api")
+	controller.UserRouter(api, db, logger)
 	r.Run(":8081")
 }

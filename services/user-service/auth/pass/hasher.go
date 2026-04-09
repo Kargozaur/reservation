@@ -10,8 +10,9 @@ func NewHasher(cost int) *Hasher {
 	return &Hasher{cost: cost}
 }
 
-func (h *Hasher) Hash(password string) ([]byte, error) {
-	return bcrypt.GenerateFromPassword([]byte(password), h.cost)
+func (h *Hasher) Hash(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), h.cost)
+	return string(hash), err
 }
 
 func (h *Hasher) Verify(password string, hash []byte) error {
