@@ -93,25 +93,17 @@ func (s *UserService) UpdateName(id uuid.UUID, updateRequest request.UpdateNameS
 	return nil
 }
 
-func (s *UserService) UpdateEmail(tokenString string, updateRequest request.UpdateEmailSchema) error {
-	id, err := s.jwt.GetUId(tokenString)
-	if err != nil {
+func (s *UserService) UpdateEmail(id uuid.UUID, updateRequest request.UpdateEmailSchema) error {
+	if err := s.validate.ValidateEmail(updateRequest.Email); err != nil {
 		return err
 	}
-	if err = s.validate.ValidateEmail(updateRequest.Email); err != nil {
-		return err
-	}
-	if err = s.repo.UpdateUserEmail(id, updateRequest); err != nil {
+	if err := s.repo.UpdateUserEmail(id, updateRequest); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *UserService) UpdatePassword(tokenString string, updateRequest request.UpdatePasswordSchema) error {
-	id, err := s.jwt.GetUId(tokenString)
-	if err != nil {
-		return err
-	}
+func (s *UserService) UpdatePassword(id uuid.UUID, updateRequest request.UpdatePasswordSchema) error {
 	if errs := s.validate.ValidatePassword(updateRequest.Password); len(errs) > 0 {
 		return errors.Join(errs...)
 	}
@@ -120,7 +112,7 @@ func (s *UserService) UpdatePassword(tokenString string, updateRequest request.U
 		return err
 	}
 	updateRequest.SwapPassword(hash)
-	if err = s.repo.UpdateUserPassword(id, updateRequest); err != nil {
+	if err := s.repo.UpdateUserPassword(id, updateRequest); err != nil {
 		return err
 	}
 	return nil

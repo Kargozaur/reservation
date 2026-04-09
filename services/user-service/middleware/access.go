@@ -11,15 +11,20 @@ import (
 func VerifyAccess(logger *slog.Logger) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		jwt := token.NewJWT()
-		if token, err := extractToken(ctx); err == nil {
-			if userID, err := jwt.GetUId(token); err == nil {
-				ctx.Set("userID", userID)
-				logger.Info("Parsed JWT with middleware")
-				ctx.Next()
-				return
-			}
+		token, err := extractToken(ctx)
+		if err != nil {
+			logger.Info("Failed to parse JWT with middleware(Did not extract token)")
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
-		logger.Info("Failed to parse JWT with middleware")
-		ctx.AbortWithStatus(http.StatusUnauthorized)
+		userID, err := jwt.GetUId(token)
+		if err != nil {
+			logger.Info("Failed to parse JWT with middleware(Failed to get id)")
+			ctx.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		ctx.Set("userID", userID)
+		logger.Info("Parsed JWT with middleware")
+		ctx.Next()
 	}
 }
