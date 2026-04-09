@@ -9,6 +9,8 @@ import (
 	"user-service/schemas/request"
 	"user-service/schemas/response"
 	"user-service/validators/credential"
+
+	"github.com/google/uuid"
 )
 
 type UserService struct {
@@ -76,11 +78,7 @@ func (s *UserService) LoginUser(loginRequest request.LoginSchema) (string, strin
 	return accessToken, refreshToken, nil
 }
 
-func (s *UserService) GetUser(tokenString string) (response.UserResponse, error) {
-	id, err := s.jwt.GetUId(tokenString)
-	if err != nil {
-		return response.UserResponse{}, err
-	}
+func (s *UserService) GetUser(id uuid.UUID) (response.UserResponse, error) {
 	user, err := s.repo.FindUserById(id)
 	if err != nil {
 		return response.UserResponse{}, err
@@ -88,12 +86,8 @@ func (s *UserService) GetUser(tokenString string) (response.UserResponse, error)
 	return response.ToUserResponse(user), nil
 }
 
-func (s *UserService) UpdateName(tokenString string, updateRequest request.UpdateNameSchema) error {
-	id, err := s.jwt.GetUId(tokenString)
-	if err != nil {
-		return err
-	}
-	if err = s.repo.UpdateUserName(id, updateRequest); err != nil {
+func (s *UserService) UpdateName(id uuid.UUID, updateRequest request.UpdateNameSchema) error {
+	if err := s.repo.UpdateUserName(id, updateRequest); err != nil {
 		return err
 	}
 	return nil

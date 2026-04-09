@@ -7,7 +7,7 @@ import (
 	"user-service/services/users"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -55,17 +55,13 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 
 func (c *UserHandler) GetUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		cookie, err := ctx.Cookie("access_token")
-		if err != nil {
+		userID, ok := ctx.Get("userID")
+		if !ok {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		user, err := c.service.GetUser(cookie)
+		user, err := c.service.GetUser(userID.(uuid.UUID))
 		if err != nil {
-			if errors.Is(err, jwt.ErrTokenExpired) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
-				return
-			}
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
@@ -84,16 +80,12 @@ func (c *UserHandler) UpdateName() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "at least one field must be provided"})
 			return
 		}
-		cookie, err := ctx.Cookie("access_token")
-		if err != nil {
+		userID, ok := ctx.Get("userID")
+		if !ok {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		if err := c.service.UpdateName(cookie, updateName); err != nil {
-			if errors.Is(err, jwt.ErrTokenExpired) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
-				return
-			}
+		if err := c.service.UpdateName(userID.(uuid.UUID), updateName); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -108,16 +100,12 @@ func (c *UserHandler) UpdateEmail() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		cookie, err := ctx.Cookie("access_token")
-		if err != nil {
+		userID, ok := ctx.Get("userID")
+		if !ok {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		if err := c.service.UpdateEmail(cookie, updateEmail); err != nil {
-			if errors.Is(err, jwt.ErrTokenExpired) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
-				return
-			}
+		if err := c.service.UpdateEmail(userID.(uuid.UUID), updateEmail); err != nil {
 			if errors.Is(err, gorm.ErrDuplicatedKey) {
 				ctx.JSON(http.StatusConflict, gin.H{"error": "email already exists"})
 				return
@@ -136,16 +124,12 @@ func (c *UserHandler) UpdatePassword() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		cookie, err := ctx.Cookie("access_token")
-		if err != nil {
+		userID, ok := ctx.Get("userID")
+		if !ok {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		if err := c.service.UpdatePassword(cookie, updatePassword); err != nil {
-			if errors.Is(err, jwt.ErrTokenExpired) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token expired"})
-				return
-			}
+		if err := c.service.UpdatePassword(userID.(uuid.UUID), updatePassword); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -155,8 +139,7 @@ func (c *UserHandler) UpdatePassword() gin.HandlerFunc {
 
 func (c *UserHandler) LogoutHandler() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		_, err := ctx.Cookie("access_token")
-		if err != nil {
+		if _, ok := ctx.Get("userID"); !ok {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
