@@ -131,3 +131,10 @@ func (s *UserService) UpdatePassword(tokenString string, updateRequest request.U
 	}
 	return nil
 }
+
+func (s *UserService) LogoutUser(refreshToken string) error {
+	if err := s.refresh.DeleteRefreshToken(refreshToken); err != nil {
+		return err
+	}
+	return nil
+}
