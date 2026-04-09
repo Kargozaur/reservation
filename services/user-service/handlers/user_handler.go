@@ -152,3 +152,25 @@ func (c *UserHandler) UpdatePassword() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, gin.H{"message": "password updated"})
 	}
 }
+
+func (c *UserHandler) LogoutHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		_, err := ctx.Cookie("access_token")
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			return
+		}
+		refreshCookie, err := ctx.Cookie("refresh_token")
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			return
+		}
+		if err := c.service.LogoutUser(refreshCookie); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.SetCookie("access_token", "", -1, "/", "", false, true)
+		ctx.SetCookie("refresh_token", "", -1, "/", "", false, true)
+		ctx.JSON(http.StatusOK, gin.H{"message": "logged out"})
+	}
+}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"user-service/auth/pass"
 	"user-service/auth/token"
+	"user-service/repositories/refresh"
 	"user-service/repositories/user"
 	"user-service/schemas/request"
 	"user-service/schemas/response"
@@ -14,14 +15,16 @@ type UserService struct {
 	phasher  pass.IPwdHasher
 	jwt      token.IJWT
 	repo     user.IUserRepository
+	refresh  refresh.IRefreshRepository
 	validate credential.IValidator
 }
 
-func NewUserService(phasher pass.IPwdHasher, jwt token.IJWT, repo user.IUserRepository, validator credential.IValidator) *UserService {
+func NewUserService(phasher pass.IPwdHasher, jwt token.IJWT, repo user.IUserRepository, refresh refresh.IRefreshRepository, validator credential.IValidator) *UserService {
 	return &UserService{
 		phasher:  phasher,
 		jwt:      jwt,
 		repo:     repo,
+		refresh:  refresh,
 		validate: validator,
 	}
 }
@@ -65,6 +68,9 @@ func (s *UserService) LoginUser(loginRequest request.LoginSchema) (string, strin
 	}
 	refreshToken, err := s.jwt.CreateRefreshToken(user.ID)
 	if err != nil {
+		return "", "", err
+	}
+	if err := s.refresh.SaveRefreshToken(user.ID, refreshToken); err != nil {
 		return "", "", err
 	}
 	return accessToken, refreshToken, nil
