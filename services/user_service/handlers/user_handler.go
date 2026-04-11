@@ -94,10 +94,6 @@ func (c *UserHandler) UpdateName() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdateName(userID.(uuid.UUID), updateName); err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				ctx.JSON(http.StatusConflict, gin.H{"error": "name already exists"})
-				return
-			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -118,8 +114,8 @@ func (c *UserHandler) UpdateEmail() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdateEmail(userID.(uuid.UUID), updateEmail); err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				ctx.JSON(http.StatusConflict, gin.H{"error": "email already exists"})
+			if errors.Is(err, gorm.ErrDuplicatedKey) {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "email is taken"})
 				return
 			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -142,10 +138,6 @@ func (c *UserHandler) UpdatePassword() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdatePassword(userID.(uuid.UUID), updatePassword); err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
-				return
-			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
