@@ -1,12 +1,13 @@
 services:
     db:
         image: postgres:18.1-alpine3.22
+        container_name: postgres
         env_file:
             - .env
         volumes:
             - db_volume:/var/lib/postgresql/data
+            - ./docker/init.sh:/docker/init.sh
         environment:
-            POSTGRES_DB: ${POSTGRES_DB}
             POSTGRES_USER: ${POSTGRES_USER}
             POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
         ports:
