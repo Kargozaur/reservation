@@ -1,4 +1,4 @@
-UDIR=services/user-service/migrations
+UDIR=services/user_service/migrations
 USERDSN=host=localhost user=$(POSTGRES_USER) port=5433 password=$(POSTGRES_PASSWORD) dbname=$(UDBNAME) sslmode=disable
 
 .PHONY: migrate-usersvc-create migrate-usersvc-up migrate-usersvc-down

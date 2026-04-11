@@ -1,4 +1,4 @@
-.PHONY: ubuser
+.PHONY: buser
 
-ubuser:
-	go build -o usersvc services/user-service/main.go
+buser:
+	go build -o usersvc services/user_service/main.go
