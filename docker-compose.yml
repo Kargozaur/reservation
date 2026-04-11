@@ -1,11 +1,11 @@
 services:
     db:
-        image: postgres:18.1-alpine3.22
+        image: postgres:18.3-trixie
         container_name: postgres
         env_file:
             - .env
         volumes:
-            - db_volume:/var/lib/postgresql/data
+            - db_volume:/var/lib/postgresql
             - ./docker/init.sh:/docker/init.sh
         environment:
             POSTGRES_USER: ${POSTGRES_USER}
