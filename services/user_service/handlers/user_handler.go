@@ -28,7 +28,11 @@ func (c *UserHandler) CreateUser() gin.HandlerFunc {
 		}
 		user, err := c.service.RegisterUser(newUser)
 		if err != nil {
-			ctx.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+			if errors.Is(err, gorm.ErrDuplicatedKey) {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "user already exists"})
+				return
+			}
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(http.StatusCreated, user)
@@ -39,6 +43,10 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var loginUser request.LoginSchema
 		if err := ctx.ShouldBindJSON(&loginUser); err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+				return
+			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -86,6 +94,10 @@ func (c *UserHandler) UpdateName() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdateName(userID.(uuid.UUID), updateName); err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				ctx.JSON(http.StatusConflict, gin.H{"error": "name already exists"})
+				return
+			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -106,7 +118,7 @@ func (c *UserHandler) UpdateEmail() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdateEmail(userID.(uuid.UUID), updateEmail); err != nil {
-			if errors.Is(err, gorm.ErrDuplicatedKey) {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
 				ctx.JSON(http.StatusConflict, gin.H{"error": "email already exists"})
 				return
 			}
@@ -130,6 +142,10 @@ func (c *UserHandler) UpdatePassword() gin.HandlerFunc {
 			return
 		}
 		if err := c.service.UpdatePassword(userID.(uuid.UUID), updatePassword); err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+				return
+			}
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
