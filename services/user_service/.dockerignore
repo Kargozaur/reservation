@@ -1,6 +1,12 @@
 **/*_test.go
 *_test.go
-.env
+*.env
 .git
 .gitignore
 *svc
+logs/*
+usersvc
+*.txt
+README.md
+Makefile
+makefiles/*
