@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -52,7 +53,11 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 				return
 			}
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
+				ctx.JSON(http.StatusNotAcceptable, gin.H{"error": "user not found"})
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.SetCookie("access_token", accessToken, 1800, "/", "localhost", false, true)
