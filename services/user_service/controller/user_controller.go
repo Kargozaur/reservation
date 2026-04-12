@@ -18,7 +18,7 @@ import (
 func buildDeps(db *gorm.DB) *handlers.UserHandler {
 	userRepo := user.NewUserRepository(db)
 	tokenRepo := refresh.NewRefreshRepository(db)
-	phasher := pass.NewHasher(14)
+	phasher := pass.NewHasher(12)
 	jwt := token.NewJWT()
 	validator := credential.NewValidator()
 	service := users.NewUserService(phasher, jwt, userRepo, tokenRepo, validator)

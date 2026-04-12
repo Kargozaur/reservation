@@ -2,6 +2,7 @@ package refresh
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"user-service/models"
 
 	"github.com/google/uuid"
@@ -17,16 +18,14 @@ func NewRefreshRepository(db *gorm.DB) *RefreshRepository {
 }
 
 func (r *RefreshRepository) SaveRefreshToken(userId uuid.UUID, refreshToken string) error {
-	hash := sha256.New()
-	hash.Write([]byte(refreshToken))
-	return r.db.Create(models.RefreshToken{Token: string(hash.Sum(nil)), UserID: userId}).Error
+	hash := sha256.Sum256([]byte(refreshToken))
+	return r.db.Create(&models.RefreshToken{Token: hex.EncodeToString(hash[:]), UserID: userId}).Error
 }
 
 func (r *RefreshRepository) GetRefreshToken(refreshToken string) (*models.RefreshToken, error) {
-	hash := sha256.New()
-	hash.Write([]byte(refreshToken))
+	hash := sha256.Sum256([]byte(refreshToken))
 	var token models.RefreshToken
-	err := r.db.First(&token, "token = ?", string(hash.Sum(nil))).Error
+	err := r.db.First(&token, "token = ?", hex.EncodeToString(hash[:])).Error
 	return &token, err
 }
 
@@ -35,7 +34,6 @@ func (r *RefreshRepository) DeleteAllUserTokens(userId uuid.UUID) error {
 }
 
 func (r *RefreshRepository) DeleteRefreshToken(tokenString string) error {
-	hash := sha256.New()
-	hash.Write([]byte(tokenString))
-	return r.db.Delete(&models.RefreshToken{}, "token = ?", string(hash.Sum(nil))).Error
+	hash := sha256.Sum256([]byte(tokenString))
+	return r.db.Delete(&models.RefreshToken{}, "token = ?", hex.EncodeToString(hash[:])).Error
 }

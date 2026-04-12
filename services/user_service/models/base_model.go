@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type BaseModel struct {
@@ -12,7 +13,7 @@ type BaseModel struct {
 	UpdatedAt time.Time
 }
 
-func (b *BaseModel) BeforeCreate() error {
+func (b *BaseModel) BeforeCreate(g *gorm.DB) error {
 	id, err := uuid.NewV7()
 	if err != nil {
 		return err
@@ -23,7 +24,7 @@ func (b *BaseModel) BeforeCreate() error {
 	b.UpdatedAt = now
 	return nil
 }
-func (b *BaseModel) BeforeUpdate() error {
+func (b *BaseModel) BeforeUpdate(g *gorm.DB) error {
 	now := time.Now().UTC()
 	b.UpdatedAt = now
 	return nil

@@ -50,7 +50,7 @@ func (s *UserService) RegisterUser(createRequest request.RegisterSchema) (respon
 	return response.ToUserResponse(user), nil
 }
 
-func (s *UserService) LoginUser(loginRequest request.LoginSchema) (string, string, error) {
+func (s *UserService) LoginUser(loginRequest *request.LoginSchema) (string, string, error) {
 	if err := s.validate.ValidateEmail(loginRequest.Email); err != nil {
 		return "", "", err
 	}

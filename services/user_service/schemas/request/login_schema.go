@@ -1,6 +1,6 @@
 package request
 
 type LoginSchema struct {
-	EmailSchema
-	PasswordSchema
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }

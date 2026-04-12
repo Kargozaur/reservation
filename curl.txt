@@ -1,0 +1,10 @@
+curl -X POST localhost:8081/api/user/register \
+-H "Content-Type: application/json" \
+-d '{"email": "user@example.com", "password":"Fotograph:3", "firstName": "Illia", "lastName": "Davydiuk"}'
+curl -c cookie.txt -X POST localhost:8081/api/user/login -H "Content-Type: application/json" -d '{"email":"user@example.com", "password": "SuperPass!23"}'
+curl -b cookie.txt -X GET localhost:8081/api/user/profile
+curl -b cookie.txt -X PUT localhost:8081/api/user/profile/update_name -H "Content-Type: application/json" -d '{"lastName": "Tipkov"}'
+curl -b cookie.txt -X PUT localhost:8081/api/user/profile/update_name -H "Content-Type: application/json" -d '{"firstName": "Vasya"}'
+curl -b cookie.txt -X PUT localhost:8081/api/user/profile/update_email -H "Content-Type: application/json" -d '{"email":"user2@example.com"}'
+curl -b cookie.txt -X PUT localhost:8081/api/user/profile/update_password -H "Content-Type: application/json" -d '{"password":"SuperPass!45"}'
+curl -c cookie.txt -X POST localhost:8081/api/user/logout

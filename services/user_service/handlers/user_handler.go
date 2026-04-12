@@ -43,15 +43,15 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var loginUser request.LoginSchema
 		if err := ctx.ShouldBindJSON(&loginUser); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		accessToken, refreshToken, err := c.service.LoginUser(&loginUser)
+		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				ctx.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
 				return
 			}
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		accessToken, refreshToken, err := c.service.LoginUser(loginUser)
-		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
