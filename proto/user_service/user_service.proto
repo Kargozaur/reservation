@@ -8,9 +8,9 @@ service UserService {
   rpc CreateUser(RegisterData) returns (GetDataResponse);
   rpc LoginUser(UserData) returns (GetTokenResponse);
   rpc GetData(GetDataRequest) returns (GetDataResponse);
-  rpc UpdateName(UpdateNameRequest) returns (DefaultResponse);
-  rpc UpdatePassword(UpdatePasswordRequest) returns (DefaultResponse);
-  rpc UpdateEmail(UpdateEmailRequest) returns (DefaultResponse);
+  rpc UpdateName(UpdateNameRequest) returns (GetMessageResponse);
+  rpc UpdatePassword(UpdatePasswordRequest) returns (GetMessageResponse);
+  rpc UpdateEmail(UpdateEmailRequest) returns (GetMessageResponse);
   rpc RefreshToken(Token) returns (GetTokenResponse);
 }
 
@@ -64,4 +64,8 @@ message UpdatePasswordRequest {
 
 message GetTokenResponse {
   Token token = 1;
+}
+
+message GetMessageResponse{
+    DefaultResponse message = 1;
 }

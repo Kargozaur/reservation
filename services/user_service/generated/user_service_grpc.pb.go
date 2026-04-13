@@ -35,9 +35,9 @@ type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *RegisterData, opts ...grpc.CallOption) (*GetDataResponse, error)
 	LoginUser(ctx context.Context, in *UserData, opts ...grpc.CallOption) (*GetTokenResponse, error)
 	GetData(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*GetDataResponse, error)
-	UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
-	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
-	UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
+	UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
+	UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
 	RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*GetTokenResponse, error)
 }
 
@@ -79,9 +79,9 @@ func (c *userServiceClient) GetData(ctx context.Context, in *GetDataRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*DefaultResponse, error) {
+func (c *userServiceClient) UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DefaultResponse)
+	out := new(GetMessageResponse)
 	err := c.cc.Invoke(ctx, UserService_UpdateName_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -89,9 +89,9 @@ func (c *userServiceClient) UpdateName(ctx context.Context, in *UpdateNameReques
 	return out, nil
 }
 
-func (c *userServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*DefaultResponse, error) {
+func (c *userServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DefaultResponse)
+	out := new(GetMessageResponse)
 	err := c.cc.Invoke(ctx, UserService_UpdatePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -99,9 +99,9 @@ func (c *userServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswo
 	return out, nil
 }
 
-func (c *userServiceClient) UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*DefaultResponse, error) {
+func (c *userServiceClient) UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*GetMessageResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DefaultResponse)
+	out := new(GetMessageResponse)
 	err := c.cc.Invoke(ctx, UserService_UpdateEmail_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -126,9 +126,9 @@ type UserServiceServer interface {
 	CreateUser(context.Context, *RegisterData) (*GetDataResponse, error)
 	LoginUser(context.Context, *UserData) (*GetTokenResponse, error)
 	GetData(context.Context, *GetDataRequest) (*GetDataResponse, error)
-	UpdateName(context.Context, *UpdateNameRequest) (*DefaultResponse, error)
-	UpdatePassword(context.Context, *UpdatePasswordRequest) (*DefaultResponse, error)
-	UpdateEmail(context.Context, *UpdateEmailRequest) (*DefaultResponse, error)
+	UpdateName(context.Context, *UpdateNameRequest) (*GetMessageResponse, error)
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*GetMessageResponse, error)
+	UpdateEmail(context.Context, *UpdateEmailRequest) (*GetMessageResponse, error)
 	RefreshToken(context.Context, *Token) (*GetTokenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
@@ -149,13 +149,13 @@ func (UnimplementedUserServiceServer) LoginUser(context.Context, *UserData) (*Ge
 func (UnimplementedUserServiceServer) GetData(context.Context, *GetDataRequest) (*GetDataResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetData not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateName(context.Context, *UpdateNameRequest) (*DefaultResponse, error) {
+func (UnimplementedUserServiceServer) UpdateName(context.Context, *UpdateNameRequest) (*GetMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateName not implemented")
 }
-func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*DefaultResponse, error) {
+func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*GetMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdatePassword not implemented")
 }
-func (UnimplementedUserServiceServer) UpdateEmail(context.Context, *UpdateEmailRequest) (*DefaultResponse, error) {
+func (UnimplementedUserServiceServer) UpdateEmail(context.Context, *UpdateEmailRequest) (*GetMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateEmail not implemented")
 }
 func (UnimplementedUserServiceServer) RefreshToken(context.Context, *Token) (*GetTokenResponse, error) {

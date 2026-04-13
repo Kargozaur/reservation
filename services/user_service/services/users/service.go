@@ -84,43 +84,57 @@ func (s *UserService) GetData(ctx context.Context, userId uuid.UUID) (*pb.GetDat
 	}, nil
 }
 
-func (s *UserService) UpdateUserName(ctx context.Context, id uuid.UUID, schema schemas.UpdateName) *pb.DefaultResponse {
+func (s *UserService) UpdateUserName(ctx context.Context, id uuid.UUID, schema schemas.UpdateName) *pb.GetMessageResponse {
 	if err := s.userRepo.UpdateUserName(ctx, id, schema); err != nil {
-		return &pb.DefaultResponse{
-			Message: err.Error(),
+		return &pb.GetMessageResponse{
+			Message: &pb.DefaultResponse{
+				Message: err.Error(),
+			},
 		}
 	}
-	return &pb.DefaultResponse{
-		Message: "user name updated successfully",
+	return &pb.GetMessageResponse{
+		Message: &pb.DefaultResponse{
+			Message: "user name updated successfully",
+		},
 	}
 }
 
-func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) *pb.DefaultResponse {
+func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) *pb.GetMessageResponse {
 	if err := s.userRepo.UpdateUserEmail(ctx, id, schema); err != nil {
-		return &pb.DefaultResponse{
-			Message: err.Error(),
+		return &pb.GetMessageResponse{
+			Message: &pb.DefaultResponse{
+				Message: err.Error(),
+			},
 		}
 	}
-	return &pb.DefaultResponse{
-		Message: "email updated successfully",
+	return &pb.GetMessageResponse{
+		Message: &pb.DefaultResponse{
+			Message: "email updated successfully",
+		},
 	}
 }
 
-func (s *UserService) UpdatePassword(ctx context.Context, id uuid.UUID, schema schemas.UpdatePassword) *pb.DefaultResponse {
+func (s *UserService) UpdatePassword(ctx context.Context, id uuid.UUID, schema schemas.UpdatePassword) *pb.GetMessageResponse {
 	hash, err := s.hasher.Hash(schema.Password)
 	if err != nil {
-		return &pb.DefaultResponse{
-			Message: err.Error(),
+		return &pb.GetMessageResponse{
+			Message: &pb.DefaultResponse{
+				Message: err.Error(),
+			},
 		}
 	}
 	schema.SwapPassword(hash)
 	if err := s.userRepo.UpdateUserPassword(ctx, id, schema); err != nil {
-		return &pb.DefaultResponse{
-			Message: err.Error(),
+		return &pb.GetMessageResponse{
+			Message: &pb.DefaultResponse{
+				Message: err.Error(),
+			},
 		}
 	}
-	return &pb.DefaultResponse{
-		Message: "password updated successfully",
+	return &pb.GetMessageResponse{
+		Message: &pb.DefaultResponse{
+			Message: "password updated successfully",
+		},
 	}
 }
 
