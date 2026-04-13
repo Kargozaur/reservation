@@ -1,1 +1,1 @@
-protoc --proto_path=proto   --go_out=services/user_service --go_opt=paths=source_relative   --go-grpc_out=services/user_service --go-grpc_opt=paths=source_relative   proto/user_service/user_service.proto
+protoc --proto_path=proto --go_out=services/user_service --go_opt=module=services/user_service --go-grpc_out=services/user_service --go-grpc_opt=module=services/user_service proto/user_service/*.proto
