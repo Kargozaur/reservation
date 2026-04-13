@@ -57,15 +57,8 @@ func (s *UserService) LoginUser(ctx context.Context, schema schemas.LoginUser) (
 	if err := s.hasher.Verify(user.Password, []byte(schema.Password)); err != nil {
 		return nil, errors.New("invalid credentials")
 	}
-	accessToken, err := s.jwtEncoder.CreateAccessToken(user.ID)
+	accessToken, refreshToken, err := s.generateTokens(ctx, user.ID)
 	if err != nil {
-		return nil, err
-	}
-	refreshToken, err := s.jwtEncoder.CreateRefreshToken(user.ID)
-	if err != nil {
-		return nil, err
-	}
-	if err := s.refreshRepo.SaveRefreshToken(ctx, user.ID, refreshToken); err != nil {
 		return nil, err
 	}
 	return &pb.GetTokenResponse{
