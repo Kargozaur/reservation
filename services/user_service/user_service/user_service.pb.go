@@ -143,7 +143,7 @@ func (x *Token) GetRefreshToken() string {
 
 type GetDataRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         *Token                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -178,11 +178,11 @@ func (*GetDataRequest) Descriptor() ([]byte, []int) {
 	return file_user_service_user_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetDataRequest) GetToken() *Token {
+func (x *GetDataRequest) GetUserId() string {
 	if x != nil {
-		return x.Token
+		return x.UserId
 	}
-	return nil
+	return ""
 }
 
 type GetDataResponse struct {
@@ -242,9 +242,9 @@ const file_user_service_user_service_proto_rawDesc = "" +
 	"\tlast_name\x18\x04 \x01(\tR\blastName\"O\n" +
 	"\x05Token\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\";\n" +
-	"\x0eGetDataRequest\x12)\n" +
-	"\x05token\x18\x01 \x01(\v2\x13.user_service.TokenR\x05token\"9\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\")\n" +
+	"\x0eGetDataRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"9\n" +
 	"\x0fGetDataResponse\x12&\n" +
 	"\x04user\x18\x01 \x01(\v2\x12.user_service.UserR\x04user2U\n" +
 	"\vUserService\x12F\n" +
@@ -270,15 +270,14 @@ var file_user_service_user_service_proto_goTypes = []any{
 	(*GetDataResponse)(nil), // 3: user_service.GetDataResponse
 }
 var file_user_service_user_service_proto_depIdxs = []int32{
-	1, // 0: user_service.GetDataRequest.token:type_name -> user_service.Token
-	0, // 1: user_service.GetDataResponse.user:type_name -> user_service.User
-	2, // 2: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
-	3, // 3: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: user_service.GetDataResponse.user:type_name -> user_service.User
+	2, // 1: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
+	3, // 2: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_user_service_user_service_proto_init() }

@@ -60,8 +60,8 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.SetCookie("access_token", accessToken, 15*60, "/", "localhost", false, true)
-		ctx.SetCookie("refresh_token", refreshToken, 60*60*24*7, "/", "localhost", false, true)
+		ctx.SetCookie("access_token", accessToken, 15*60, "/", "", false, true)
+		ctx.SetCookie("refresh_token", refreshToken, 60*60*24*7, "/", "", false, true)
 		ctx.JSON(http.StatusCreated, gin.H{"message": "login successful"})
 	}
 }

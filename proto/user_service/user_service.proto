@@ -17,7 +17,7 @@ message Token {
 }
 
 message GetDataRequest {
-  Token token = 1;
+  string user_id = 1;
 }
 
 message GetDataResponse {
