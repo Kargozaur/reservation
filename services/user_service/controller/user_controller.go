@@ -32,7 +32,7 @@ func UserRouter(rg *gin.RouterGroup, db *gorm.DB, logger *slog.Logger) {
 	{
 		user.POST("/register", handler.CreateUser())
 		user.POST("/login", handler.LoginUser())
-		user.POST("/refresh", handler.RefreshTokenHandler())
+		user.POST("/refresh", handler.Refresh())
 
 		auth := user.Group("/")
 		auth.Use(middleware.VerifyAccess(logger))

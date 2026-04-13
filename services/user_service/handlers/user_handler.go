@@ -66,7 +66,7 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 	}
 }
 
-func (c *UserHandler) RefreshTokenHandler() gin.HandlerFunc {
+func (c *UserHandler) Refresh() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		refreshCookie, err := ctx.Cookie("refresh_token")
 		if err != nil {
