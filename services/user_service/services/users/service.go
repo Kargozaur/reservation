@@ -11,6 +11,7 @@ import (
 	"user-service/schemas"
 
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
@@ -37,6 +38,9 @@ func (s *UserService) CreateUser(ctx context.Context, schema schemas.CreateUser)
 	schema.SwapPassword(hash)
 	user, err := s.userRepo.CreateUser(schema)
 	if err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return nil, errors.New("email already exists")
+		}
 		return nil, err
 	}
 	return &pb.GetDataResponse{
@@ -52,7 +56,10 @@ func (s *UserService) CreateUser(ctx context.Context, schema schemas.CreateUser)
 func (s *UserService) LoginUser(ctx context.Context, schema schemas.LoginUser) (*pb.GetTokenResponse, error) {
 	user, err := s.userRepo.GetUserByEmail(ctx, schema.Email)
 	if err != nil {
-		return nil, errors.New("invalid credentials")
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("invalid credentials")
+		}
+		return nil, err
 	}
 	if err := s.hasher.Verify(user.Password, []byte(schema.Password)); err != nil {
 		return nil, errors.New("invalid credentials")
@@ -101,6 +108,13 @@ func (s *UserService) UpdateUserName(ctx context.Context, id uuid.UUID, schema s
 
 func (s *UserService) UpdateEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) *pb.GetMessageResponse {
 	if err := s.userRepo.UpdateUserEmail(ctx, id, schema); err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return &pb.GetMessageResponse{
+				Message: &pb.DefaultResponse{
+					Message: "email already exists",
+				},
+			}
+		}
 		return &pb.GetMessageResponse{
 			Message: &pb.DefaultResponse{
 				Message: err.Error(),
