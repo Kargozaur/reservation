@@ -60,9 +60,27 @@ func (c *UserHandler) LoginUser() gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.SetCookie("access_token", accessToken, 1800, "/", "localhost", false, true)
+		ctx.SetCookie("access_token", accessToken, 15*60, "/", "localhost", false, true)
 		ctx.SetCookie("refresh_token", refreshToken, 60*60*24*7, "/", "localhost", false, true)
 		ctx.JSON(http.StatusCreated, gin.H{"message": "login successful"})
+	}
+}
+
+func (c *UserHandler) RefreshTokenHandler() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		refreshCookie, err := ctx.Cookie("refresh_token")
+		if err != nil {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			return
+		}
+		newAccessToken, newRefreshToken, err := c.service.RefreshToken(refreshCookie)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.SetCookie("access_token", newAccessToken, 15*60, "/", "", false, true)
+		ctx.SetCookie("refresh_token", newRefreshToken, 60*60*24*7, "/", "", false, true)
+		ctx.JSON(http.StatusOK, gin.H{"message": "token refreshed"})
 	}
 }
 

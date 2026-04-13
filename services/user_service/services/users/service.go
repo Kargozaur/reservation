@@ -124,3 +124,22 @@ func (s *UserService) LogoutUser(refreshToken string) error {
 	}
 	return nil
 }
+
+func (s *UserService) RefreshToken(refreshToken string) (string, string, error) {
+	if err := s.refresh.DeleteRefreshToken(refreshToken); err != nil {
+		return "", "", err
+	}
+	userID, err := s.jwt.GetUId(refreshToken)
+	if err != nil {
+		return "", "", err
+	}
+	newAccessToken, err := s.jwt.CreateAccessToken(userID)
+	if err != nil {
+		return "", "", err
+	}
+	newRefreshToken, err := s.jwt.CreateRefreshToken(userID)
+	if err != nil {
+		return "", "", err
+	}
+	return newAccessToken, newRefreshToken, nil
+}
