@@ -33,12 +33,12 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	CreateUser(ctx context.Context, in *RegisterData, opts ...grpc.CallOption) (*GetDataResponse, error)
-	LoginUser(ctx context.Context, in *UserData, opts ...grpc.CallOption) (*Token, error)
+	LoginUser(ctx context.Context, in *UserData, opts ...grpc.CallOption) (*GetTokenResponse, error)
 	GetData(ctx context.Context, in *GetDataRequest, opts ...grpc.CallOption) (*GetDataResponse, error)
 	UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
 	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
 	UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*DefaultResponse, error)
-	RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Token, error)
+	RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*GetTokenResponse, error)
 }
 
 type userServiceClient struct {
@@ -59,9 +59,9 @@ func (c *userServiceClient) CreateUser(ctx context.Context, in *RegisterData, op
 	return out, nil
 }
 
-func (c *userServiceClient) LoginUser(ctx context.Context, in *UserData, opts ...grpc.CallOption) (*Token, error) {
+func (c *userServiceClient) LoginUser(ctx context.Context, in *UserData, opts ...grpc.CallOption) (*GetTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Token)
+	out := new(GetTokenResponse)
 	err := c.cc.Invoke(ctx, UserService_LoginUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -109,9 +109,9 @@ func (c *userServiceClient) UpdateEmail(ctx context.Context, in *UpdateEmailRequ
 	return out, nil
 }
 
-func (c *userServiceClient) RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*Token, error) {
+func (c *userServiceClient) RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*GetTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Token)
+	out := new(GetTokenResponse)
 	err := c.cc.Invoke(ctx, UserService_RefreshToken_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -124,12 +124,12 @@ func (c *userServiceClient) RefreshToken(ctx context.Context, in *Token, opts ..
 // for forward compatibility.
 type UserServiceServer interface {
 	CreateUser(context.Context, *RegisterData) (*GetDataResponse, error)
-	LoginUser(context.Context, *UserData) (*Token, error)
+	LoginUser(context.Context, *UserData) (*GetTokenResponse, error)
 	GetData(context.Context, *GetDataRequest) (*GetDataResponse, error)
 	UpdateName(context.Context, *UpdateNameRequest) (*DefaultResponse, error)
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*DefaultResponse, error)
 	UpdateEmail(context.Context, *UpdateEmailRequest) (*DefaultResponse, error)
-	RefreshToken(context.Context, *Token) (*Token, error)
+	RefreshToken(context.Context, *Token) (*GetTokenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -143,7 +143,7 @@ type UnimplementedUserServiceServer struct{}
 func (UnimplementedUserServiceServer) CreateUser(context.Context, *RegisterData) (*GetDataResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateUser not implemented")
 }
-func (UnimplementedUserServiceServer) LoginUser(context.Context, *UserData) (*Token, error) {
+func (UnimplementedUserServiceServer) LoginUser(context.Context, *UserData) (*GetTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method LoginUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetData(context.Context, *GetDataRequest) (*GetDataResponse, error) {
@@ -158,7 +158,7 @@ func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePas
 func (UnimplementedUserServiceServer) UpdateEmail(context.Context, *UpdateEmailRequest) (*DefaultResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateEmail not implemented")
 }
-func (UnimplementedUserServiceServer) RefreshToken(context.Context, *Token) (*Token, error) {
+func (UnimplementedUserServiceServer) RefreshToken(context.Context, *Token) (*GetTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}

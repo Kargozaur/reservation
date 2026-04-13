@@ -525,6 +525,50 @@ func (x *UpdatePasswordRequest) GetPassword() string {
 	return ""
 }
 
+type GetTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Token         *Token                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTokenResponse) Reset() {
+	*x = GetTokenResponse{}
+	mi := &file_user_service_user_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTokenResponse) ProtoMessage() {}
+
+func (x *GetTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_user_service_user_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTokenResponse.ProtoReflect.Descriptor instead.
+func (*GetTokenResponse) Descriptor() ([]byte, []int) {
+	return file_user_service_user_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *GetTokenResponse) GetToken() *Token {
+	if x != nil {
+		return x.Token
+	}
+	return nil
+}
+
 var File_user_service_user_service_proto protoreflect.FileDescriptor
 
 const file_user_service_user_service_proto_rawDesc = "" +
@@ -563,17 +607,19 @@ const file_user_service_user_service_proto_rawDesc = "" +
 	"\x12UpdateEmailRequest\x12\x14\n" +
 	"\x05email\x18\x01 \x01(\tR\x05email\"3\n" +
 	"\x15UpdatePasswordRequest\x12\x1a\n" +
-	"\bpassword\x18\x01 \x01(\tR\bpassword2\x86\x04\n" +
+	"\bpassword\x18\x01 \x01(\tR\bpassword\"=\n" +
+	"\x10GetTokenResponse\x12)\n" +
+	"\x05token\x18\x01 \x01(\v2\x13.user_service.TokenR\x05token2\x9c\x04\n" +
 	"\vUserService\x12G\n" +
 	"\n" +
-	"CreateUser\x12\x1a.user_service.RegisterData\x1a\x1d.user_service.GetDataResponse\x128\n" +
-	"\tLoginUser\x12\x16.user_service.UserData\x1a\x13.user_service.Token\x12F\n" +
+	"CreateUser\x12\x1a.user_service.RegisterData\x1a\x1d.user_service.GetDataResponse\x12C\n" +
+	"\tLoginUser\x12\x16.user_service.UserData\x1a\x1e.user_service.GetTokenResponse\x12F\n" +
 	"\aGetData\x12\x1c.user_service.GetDataRequest\x1a\x1d.user_service.GetDataResponse\x12L\n" +
 	"\n" +
 	"UpdateName\x12\x1f.user_service.UpdateNameRequest\x1a\x1d.user_service.DefaultResponse\x12T\n" +
 	"\x0eUpdatePassword\x12#.user_service.UpdatePasswordRequest\x1a\x1d.user_service.DefaultResponse\x12N\n" +
-	"\vUpdateEmail\x12 .user_service.UpdateEmailRequest\x1a\x1d.user_service.DefaultResponse\x128\n" +
-	"\fRefreshToken\x12\x13.user_service.Token\x1a\x13.user_service.TokenB!Z\x1fservices/user_service/generatedb\x06proto3"
+	"\vUpdateEmail\x12 .user_service.UpdateEmailRequest\x1a\x1d.user_service.DefaultResponse\x12C\n" +
+	"\fRefreshToken\x12\x13.user_service.Token\x1a\x1e.user_service.GetTokenResponseB!Z\x1fservices/user_service/generatedb\x06proto3"
 
 var (
 	file_user_service_user_service_proto_rawDescOnce sync.Once
@@ -587,7 +633,7 @@ func file_user_service_user_service_proto_rawDescGZIP() []byte {
 	return file_user_service_user_service_proto_rawDescData
 }
 
-var file_user_service_user_service_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_user_service_user_service_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_user_service_user_service_proto_goTypes = []any{
 	(*RegisterData)(nil),          // 0: user_service.RegisterData
 	(*UserData)(nil),              // 1: user_service.UserData
@@ -599,29 +645,31 @@ var file_user_service_user_service_proto_goTypes = []any{
 	(*DefaultResponse)(nil),       // 7: user_service.DefaultResponse
 	(*UpdateEmailRequest)(nil),    // 8: user_service.UpdateEmailRequest
 	(*UpdatePasswordRequest)(nil), // 9: user_service.UpdatePasswordRequest
+	(*GetTokenResponse)(nil),      // 10: user_service.GetTokenResponse
 }
 var file_user_service_user_service_proto_depIdxs = []int32{
-	1, // 0: user_service.RegisterData.user_data:type_name -> user_service.UserData
-	2, // 1: user_service.GetDataResponse.user:type_name -> user_service.User
-	0, // 2: user_service.UserService.CreateUser:input_type -> user_service.RegisterData
-	1, // 3: user_service.UserService.LoginUser:input_type -> user_service.UserData
-	4, // 4: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
-	6, // 5: user_service.UserService.UpdateName:input_type -> user_service.UpdateNameRequest
-	9, // 6: user_service.UserService.UpdatePassword:input_type -> user_service.UpdatePasswordRequest
-	8, // 7: user_service.UserService.UpdateEmail:input_type -> user_service.UpdateEmailRequest
-	3, // 8: user_service.UserService.RefreshToken:input_type -> user_service.Token
-	5, // 9: user_service.UserService.CreateUser:output_type -> user_service.GetDataResponse
-	3, // 10: user_service.UserService.LoginUser:output_type -> user_service.Token
-	5, // 11: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
-	7, // 12: user_service.UserService.UpdateName:output_type -> user_service.DefaultResponse
-	7, // 13: user_service.UserService.UpdatePassword:output_type -> user_service.DefaultResponse
-	7, // 14: user_service.UserService.UpdateEmail:output_type -> user_service.DefaultResponse
-	3, // 15: user_service.UserService.RefreshToken:output_type -> user_service.Token
-	9, // [9:16] is the sub-list for method output_type
-	2, // [2:9] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1,  // 0: user_service.RegisterData.user_data:type_name -> user_service.UserData
+	2,  // 1: user_service.GetDataResponse.user:type_name -> user_service.User
+	3,  // 2: user_service.GetTokenResponse.token:type_name -> user_service.Token
+	0,  // 3: user_service.UserService.CreateUser:input_type -> user_service.RegisterData
+	1,  // 4: user_service.UserService.LoginUser:input_type -> user_service.UserData
+	4,  // 5: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
+	6,  // 6: user_service.UserService.UpdateName:input_type -> user_service.UpdateNameRequest
+	9,  // 7: user_service.UserService.UpdatePassword:input_type -> user_service.UpdatePasswordRequest
+	8,  // 8: user_service.UserService.UpdateEmail:input_type -> user_service.UpdateEmailRequest
+	3,  // 9: user_service.UserService.RefreshToken:input_type -> user_service.Token
+	5,  // 10: user_service.UserService.CreateUser:output_type -> user_service.GetDataResponse
+	10, // 11: user_service.UserService.LoginUser:output_type -> user_service.GetTokenResponse
+	5,  // 12: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
+	7,  // 13: user_service.UserService.UpdateName:output_type -> user_service.DefaultResponse
+	7,  // 14: user_service.UserService.UpdatePassword:output_type -> user_service.DefaultResponse
+	7,  // 15: user_service.UserService.UpdateEmail:output_type -> user_service.DefaultResponse
+	10, // 16: user_service.UserService.RefreshToken:output_type -> user_service.GetTokenResponse
+	10, // [10:17] is the sub-list for method output_type
+	3,  // [3:10] is the sub-list for method input_type
+	3,  // [3:3] is the sub-list for extension type_name
+	3,  // [3:3] is the sub-list for extension extendee
+	0,  // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_user_service_user_service_proto_init() }
@@ -636,7 +684,7 @@ func file_user_service_user_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_service_user_service_proto_rawDesc), len(file_user_service_user_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -6,12 +6,12 @@ option go_package = "services/user_service/generated";
 
 service UserService {
   rpc CreateUser(RegisterData) returns (GetDataResponse);
-  rpc LoginUser(UserData) returns (Token);
+  rpc LoginUser(UserData) returns (GetTokenResponse);
   rpc GetData(GetDataRequest) returns (GetDataResponse);
   rpc UpdateName(UpdateNameRequest) returns (DefaultResponse);
   rpc UpdatePassword(UpdatePasswordRequest) returns (DefaultResponse);
   rpc UpdateEmail(UpdateEmailRequest) returns (DefaultResponse);
-  rpc RefreshToken(Token) returns (Token);
+  rpc RefreshToken(Token) returns (GetTokenResponse);
 }
 
 message RegisterData {
@@ -60,4 +60,8 @@ message UpdateEmailRequest {
 
 message UpdatePasswordRequest {
   string password = 1;
+}
+
+message GetTokenResponse {
+  Token token = 1;
 }
