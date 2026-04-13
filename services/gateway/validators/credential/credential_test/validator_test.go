@@ -2,8 +2,8 @@ package credential_test
 
 import (
 	"errors"
+	"services/gateway/validators/credential"
 	"testing"
-	"user-service/validators/credential"
 )
 
 func TestValidateEmail(t *testing.T) {

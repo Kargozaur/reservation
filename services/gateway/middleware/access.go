@@ -3,7 +3,7 @@ package middleware
 import (
 	"log/slog"
 	"net/http"
-	"user-service/auth/token"
+	"services/gateway/auth/token"
 
 	"github.com/gin-gonic/gin"
 )
