@@ -41,7 +41,7 @@ func (r *UserRepository) GetUserByEmail(ctx context.Context, email string) (*mod
 	return &user, nil
 }
 
-func (r *UserRepository) UpdateName(ctx context.Context, id uuid.UUID, schema schemas.UpdateName) error {
+func (r *UserRepository) UpdateUserName(ctx context.Context, id uuid.UUID, schema schemas.UpdateName) error {
 	var user models.User
 	if err := r.db.WithContext(ctx).First(&user, id).Error; err != nil {
 		return err
@@ -50,7 +50,7 @@ func (r *UserRepository) UpdateName(ctx context.Context, id uuid.UUID, schema sc
 	return r.db.WithContext(ctx).Save(&user).Error
 }
 
-func (r *UserRepository) UpdateEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) error {
+func (r *UserRepository) UpdateUserEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) error {
 	var user models.User
 	if err := r.db.WithContext(ctx).First(&user, id).Error; err != nil {
 		return err
@@ -59,7 +59,7 @@ func (r *UserRepository) UpdateEmail(ctx context.Context, id uuid.UUID, schema s
 	return r.db.WithContext(ctx).Save(&user).Error
 }
 
-func (r *UserRepository) UpdatePassword(ctx context.Context, id uuid.UUID, schema schemas.UpdatePassword) error {
+func (r *UserRepository) UpdateUserPassword(ctx context.Context, id uuid.UUID, schema schemas.UpdatePassword) error {
 	var user models.User
 	if err := r.db.WithContext(ctx).First(&user, id).Error; err != nil {
 		return err

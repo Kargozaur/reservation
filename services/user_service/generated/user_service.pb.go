@@ -343,6 +343,7 @@ func (x *GetDataResponse) GetUser() *User {
 
 type UpdateNameRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	FirstName     *string                `protobuf:"bytes,2,opt,name=first_name,json=firstName,proto3,oneof" json:"first_name,omitempty"`
 	LastName      *string                `protobuf:"bytes,3,opt,name=last_name,json=lastName,proto3,oneof" json:"last_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -377,6 +378,13 @@ func (x *UpdateNameRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdateNameRequest.ProtoReflect.Descriptor instead.
 func (*UpdateNameRequest) Descriptor() ([]byte, []int) {
 	return file_user_service_user_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *UpdateNameRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 func (x *UpdateNameRequest) GetFirstName() string {
@@ -439,7 +447,8 @@ func (x *DefaultResponse) GetMessage() string {
 
 type UpdateEmailRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -474,6 +483,13 @@ func (*UpdateEmailRequest) Descriptor() ([]byte, []int) {
 	return file_user_service_user_service_proto_rawDescGZIP(), []int{8}
 }
 
+func (x *UpdateEmailRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
 func (x *UpdateEmailRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
@@ -483,7 +499,8 @@ func (x *UpdateEmailRequest) GetEmail() string {
 
 type UpdatePasswordRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Password      string                 `protobuf:"bytes,1,opt,name=password,proto3" json:"password,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -516,6 +533,13 @@ func (x *UpdatePasswordRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use UpdatePasswordRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePasswordRequest) Descriptor() ([]byte, []int) {
 	return file_user_service_user_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *UpdatePasswordRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 func (x *UpdatePasswordRequest) GetPassword() string {
@@ -613,6 +637,58 @@ func (x *GetMessageResponse) GetMessage() *DefaultResponse {
 	return nil
 }
 
+type GetTokenPair struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Token         *Token                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTokenPair) Reset() {
+	*x = GetTokenPair{}
+	mi := &file_user_service_user_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTokenPair) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTokenPair) ProtoMessage() {}
+
+func (x *GetTokenPair) ProtoReflect() protoreflect.Message {
+	mi := &file_user_service_user_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTokenPair.ProtoReflect.Descriptor instead.
+func (*GetTokenPair) Descriptor() ([]byte, []int) {
+	return file_user_service_user_service_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *GetTokenPair) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *GetTokenPair) GetToken() *Token {
+	if x != nil {
+		return x.Token
+	}
+	return nil
+}
+
 var File_user_service_user_service_proto protoreflect.FileDescriptor
 
 const file_user_service_user_service_proto_rawDesc = "" +
@@ -638,8 +714,9 @@ const file_user_service_user_service_proto_rawDesc = "" +
 	"\x0eGetDataRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\"9\n" +
 	"\x0fGetDataResponse\x12&\n" +
-	"\x04user\x18\x01 \x01(\v2\x12.user_service.UserR\x04user\"v\n" +
-	"\x11UpdateNameRequest\x12\"\n" +
+	"\x04user\x18\x01 \x01(\v2\x12.user_service.UserR\x04user\"\x8f\x01\n" +
+	"\x11UpdateNameRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\"\n" +
 	"\n" +
 	"first_name\x18\x02 \x01(\tH\x00R\tfirstName\x88\x01\x01\x12 \n" +
 	"\tlast_name\x18\x03 \x01(\tH\x01R\blastName\x88\x01\x01B\r\n" +
@@ -647,15 +724,20 @@ const file_user_service_user_service_proto_rawDesc = "" +
 	"\n" +
 	"_last_name\"+\n" +
 	"\x0fDefaultResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\"*\n" +
-	"\x12UpdateEmailRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"3\n" +
-	"\x15UpdatePasswordRequest\x12\x1a\n" +
-	"\bpassword\x18\x01 \x01(\tR\bpassword\"=\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\"C\n" +
+	"\x12UpdateEmailRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\"L\n" +
+	"\x15UpdatePasswordRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"=\n" +
 	"\x10GetTokenResponse\x12)\n" +
 	"\x05token\x18\x01 \x01(\v2\x13.user_service.TokenR\x05token\"M\n" +
 	"\x12GetMessageResponse\x127\n" +
-	"\amessage\x18\x01 \x01(\v2\x1d.user_service.DefaultResponseR\amessage2\xa5\x04\n" +
+	"\amessage\x18\x01 \x01(\v2\x1d.user_service.DefaultResponseR\amessage\"R\n" +
+	"\fGetTokenPair\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12)\n" +
+	"\x05token\x18\x02 \x01(\v2\x13.user_service.TokenR\x05token2\xac\x04\n" +
 	"\vUserService\x12G\n" +
 	"\n" +
 	"CreateUser\x12\x1a.user_service.RegisterData\x1a\x1d.user_service.GetDataResponse\x12C\n" +
@@ -664,8 +746,8 @@ const file_user_service_user_service_proto_rawDesc = "" +
 	"\n" +
 	"UpdateName\x12\x1f.user_service.UpdateNameRequest\x1a .user_service.GetMessageResponse\x12W\n" +
 	"\x0eUpdatePassword\x12#.user_service.UpdatePasswordRequest\x1a .user_service.GetMessageResponse\x12Q\n" +
-	"\vUpdateEmail\x12 .user_service.UpdateEmailRequest\x1a .user_service.GetMessageResponse\x12C\n" +
-	"\fRefreshToken\x12\x13.user_service.Token\x1a\x1e.user_service.GetTokenResponseB!Z\x1fservices/user_service/generatedb\x06proto3"
+	"\vUpdateEmail\x12 .user_service.UpdateEmailRequest\x1a .user_service.GetMessageResponse\x12J\n" +
+	"\fRefreshToken\x12\x1a.user_service.GetTokenPair\x1a\x1e.user_service.GetTokenResponseB!Z\x1fservices/user_service/generatedb\x06proto3"
 
 var (
 	file_user_service_user_service_proto_rawDescOnce sync.Once
@@ -679,7 +761,7 @@ func file_user_service_user_service_proto_rawDescGZIP() []byte {
 	return file_user_service_user_service_proto_rawDescData
 }
 
-var file_user_service_user_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_user_service_user_service_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_user_service_user_service_proto_goTypes = []any{
 	(*RegisterData)(nil),          // 0: user_service.RegisterData
 	(*UserData)(nil),              // 1: user_service.UserData
@@ -693,31 +775,33 @@ var file_user_service_user_service_proto_goTypes = []any{
 	(*UpdatePasswordRequest)(nil), // 9: user_service.UpdatePasswordRequest
 	(*GetTokenResponse)(nil),      // 10: user_service.GetTokenResponse
 	(*GetMessageResponse)(nil),    // 11: user_service.GetMessageResponse
+	(*GetTokenPair)(nil),          // 12: user_service.GetTokenPair
 }
 var file_user_service_user_service_proto_depIdxs = []int32{
 	1,  // 0: user_service.RegisterData.user_data:type_name -> user_service.UserData
 	2,  // 1: user_service.GetDataResponse.user:type_name -> user_service.User
 	3,  // 2: user_service.GetTokenResponse.token:type_name -> user_service.Token
 	7,  // 3: user_service.GetMessageResponse.message:type_name -> user_service.DefaultResponse
-	0,  // 4: user_service.UserService.CreateUser:input_type -> user_service.RegisterData
-	1,  // 5: user_service.UserService.LoginUser:input_type -> user_service.UserData
-	4,  // 6: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
-	6,  // 7: user_service.UserService.UpdateName:input_type -> user_service.UpdateNameRequest
-	9,  // 8: user_service.UserService.UpdatePassword:input_type -> user_service.UpdatePasswordRequest
-	8,  // 9: user_service.UserService.UpdateEmail:input_type -> user_service.UpdateEmailRequest
-	3,  // 10: user_service.UserService.RefreshToken:input_type -> user_service.Token
-	5,  // 11: user_service.UserService.CreateUser:output_type -> user_service.GetDataResponse
-	10, // 12: user_service.UserService.LoginUser:output_type -> user_service.GetTokenResponse
-	5,  // 13: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
-	11, // 14: user_service.UserService.UpdateName:output_type -> user_service.GetMessageResponse
-	11, // 15: user_service.UserService.UpdatePassword:output_type -> user_service.GetMessageResponse
-	11, // 16: user_service.UserService.UpdateEmail:output_type -> user_service.GetMessageResponse
-	10, // 17: user_service.UserService.RefreshToken:output_type -> user_service.GetTokenResponse
-	11, // [11:18] is the sub-list for method output_type
-	4,  // [4:11] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	3,  // 4: user_service.GetTokenPair.token:type_name -> user_service.Token
+	0,  // 5: user_service.UserService.CreateUser:input_type -> user_service.RegisterData
+	1,  // 6: user_service.UserService.LoginUser:input_type -> user_service.UserData
+	4,  // 7: user_service.UserService.GetData:input_type -> user_service.GetDataRequest
+	6,  // 8: user_service.UserService.UpdateName:input_type -> user_service.UpdateNameRequest
+	9,  // 9: user_service.UserService.UpdatePassword:input_type -> user_service.UpdatePasswordRequest
+	8,  // 10: user_service.UserService.UpdateEmail:input_type -> user_service.UpdateEmailRequest
+	12, // 11: user_service.UserService.RefreshToken:input_type -> user_service.GetTokenPair
+	5,  // 12: user_service.UserService.CreateUser:output_type -> user_service.GetDataResponse
+	10, // 13: user_service.UserService.LoginUser:output_type -> user_service.GetTokenResponse
+	5,  // 14: user_service.UserService.GetData:output_type -> user_service.GetDataResponse
+	11, // 15: user_service.UserService.UpdateName:output_type -> user_service.GetMessageResponse
+	11, // 16: user_service.UserService.UpdatePassword:output_type -> user_service.GetMessageResponse
+	11, // 17: user_service.UserService.UpdateEmail:output_type -> user_service.GetMessageResponse
+	10, // 18: user_service.UserService.RefreshToken:output_type -> user_service.GetTokenResponse
+	12, // [12:19] is the sub-list for method output_type
+	5,  // [5:12] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_user_service_user_service_proto_init() }
@@ -732,7 +816,7 @@ func file_user_service_user_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_service_user_service_proto_rawDesc), len(file_user_service_user_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   13,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

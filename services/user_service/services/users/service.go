@@ -36,7 +36,7 @@ func (s *UserService) CreateUser(ctx context.Context, schema schemas.CreateUser)
 		return nil, err
 	}
 	schema.SwapPassword(hash)
-	user, err := s.userRepo.CreateUser(schema)
+	user, err := s.userRepo.CreateUser(ctx, schema)
 	if err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
 			return nil, errors.New("email already exists")

@@ -9,7 +9,7 @@ import (
 )
 
 type IUserRepository interface {
-	CreateUser(schemas.CreateUser) (schemas.UserResponse, error)
+	CreateUser(ctx context.Context, user schemas.CreateUser) (schemas.UserResponse, error)
 	FindUserByID(ctx context.Context, id uuid.UUID) (schemas.UserResponse, error)
 	UpdateUserName(ctx context.Context, id uuid.UUID, schema schemas.UpdateName) error
 	UpdateUserEmail(ctx context.Context, id uuid.UUID, schema schemas.UpdateEmail) error

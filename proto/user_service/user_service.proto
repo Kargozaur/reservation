@@ -11,7 +11,7 @@ service UserService {
   rpc UpdateName(UpdateNameRequest) returns (GetMessageResponse);
   rpc UpdatePassword(UpdatePasswordRequest) returns (GetMessageResponse);
   rpc UpdateEmail(UpdateEmailRequest) returns (GetMessageResponse);
-  rpc RefreshToken(Token) returns (GetTokenResponse);
+  rpc RefreshToken(GetTokenPair) returns (GetTokenResponse);
 }
 
 message RegisterData {
@@ -46,6 +46,7 @@ message GetDataResponse {
 }
 
 message UpdateNameRequest {
+  string user_id = 1;
   optional string first_name = 2;
   optional string last_name = 3;
 }
@@ -55,17 +56,24 @@ message DefaultResponse {
 }
 
 message UpdateEmailRequest {
-  string email = 1;
+  string user_id = 1;
+  string email = 2;
 }
 
 message UpdatePasswordRequest {
-  string password = 1;
+  string user_id = 1;
+  string password = 2;
 }
 
 message GetTokenResponse {
   Token token = 1;
 }
 
-message GetMessageResponse{
-    DefaultResponse message = 1;
+message GetMessageResponse {
+  DefaultResponse message = 1;
+}
+
+message GetTokenPair {
+  string user_id = 1;
+  Token token = 2;
 }

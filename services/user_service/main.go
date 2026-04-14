@@ -4,6 +4,14 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"user-service/auth/pass"
+	"user-service/auth/token"
+	"user-service/handlers"
+	"user-service/repositories/refresh"
+	"user-service/repositories/user"
+	"user-service/services/users"
+
+	"gorm.io/gorm"
 )
 
 func NewLogger(filePath string) (*slog.Logger, *os.File) {
@@ -24,8 +32,17 @@ func NewLogger(filePath string) (*slog.Logger, *os.File) {
 	}
 
 	handler := slog.NewJSONHandler(file, opts)
-
 	return slog.New(handler), file
+}
+
+func buildDeps(db *gorm.DB, logger *slog.Logger) *handlers.GRPCHandler {
+	jwtEncoder := token.NewJWT()
+	hasher := pass.NewHasher(12)
+	userRepo := user.NewUserRepository(db)
+	refreshRepo := refresh.NewRefreshRepository(db)
+	service := users.NewUserService(jwtEncoder, userRepo, refreshRepo, hasher)
+	handler := handlers.NewGRPCHandler(*service, logger)
+	return handler
 }
 
 func main() {

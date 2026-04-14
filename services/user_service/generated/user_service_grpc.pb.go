@@ -38,7 +38,7 @@ type UserServiceClient interface {
 	UpdateName(ctx context.Context, in *UpdateNameRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
 	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
 	UpdateEmail(ctx context.Context, in *UpdateEmailRequest, opts ...grpc.CallOption) (*GetMessageResponse, error)
-	RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*GetTokenResponse, error)
+	RefreshToken(ctx context.Context, in *GetTokenPair, opts ...grpc.CallOption) (*GetTokenResponse, error)
 }
 
 type userServiceClient struct {
@@ -109,7 +109,7 @@ func (c *userServiceClient) UpdateEmail(ctx context.Context, in *UpdateEmailRequ
 	return out, nil
 }
 
-func (c *userServiceClient) RefreshToken(ctx context.Context, in *Token, opts ...grpc.CallOption) (*GetTokenResponse, error) {
+func (c *userServiceClient) RefreshToken(ctx context.Context, in *GetTokenPair, opts ...grpc.CallOption) (*GetTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTokenResponse)
 	err := c.cc.Invoke(ctx, UserService_RefreshToken_FullMethodName, in, out, cOpts...)
@@ -129,7 +129,7 @@ type UserServiceServer interface {
 	UpdateName(context.Context, *UpdateNameRequest) (*GetMessageResponse, error)
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*GetMessageResponse, error)
 	UpdateEmail(context.Context, *UpdateEmailRequest) (*GetMessageResponse, error)
-	RefreshToken(context.Context, *Token) (*GetTokenResponse, error)
+	RefreshToken(context.Context, *GetTokenPair) (*GetTokenResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -158,7 +158,7 @@ func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePas
 func (UnimplementedUserServiceServer) UpdateEmail(context.Context, *UpdateEmailRequest) (*GetMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method UpdateEmail not implemented")
 }
-func (UnimplementedUserServiceServer) RefreshToken(context.Context, *Token) (*GetTokenResponse, error) {
+func (UnimplementedUserServiceServer) RefreshToken(context.Context, *GetTokenPair) (*GetTokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
@@ -291,7 +291,7 @@ func _UserService_UpdateEmail_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _UserService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Token)
+	in := new(GetTokenPair)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -303,7 +303,7 @@ func _UserService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: UserService_RefreshToken_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).RefreshToken(ctx, req.(*Token))
+		return srv.(UserServiceServer).RefreshToken(ctx, req.(*GetTokenPair))
 	}
 	return interceptor(ctx, in, info, handler)
 }
