@@ -4,11 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"strings"
 	"user-service/generated"
 	"user-service/schemas"
 	"user-service/services/users"
 
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type GRPCHandler struct {
@@ -22,6 +25,9 @@ func NewGRPCHandler(service users.UserService, logger *slog.Logger) *GRPCHandler
 }
 
 func (h *GRPCHandler) CreateUser(ctx context.Context, req *generated.RegisterData) (*generated.GetDataResponse, error) {
+	if req == nil || req.UserData == nil {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	schema := schemas.CreateUser{
 		Email:     req.UserData.Email,
 		Password:  req.UserData.Password,
@@ -37,6 +43,9 @@ func (h *GRPCHandler) CreateUser(ctx context.Context, req *generated.RegisterDat
 }
 
 func (h *GRPCHandler) LoginUser(ctx context.Context, req *generated.UserData) (*generated.GetTokenResponse, error) {
+	if req == nil || req.Email == "" || req.Password == "" {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	schema := schemas.LoginUser{
 		Email:    req.Email,
 		Password: req.Password,
@@ -50,6 +59,9 @@ func (h *GRPCHandler) LoginUser(ctx context.Context, req *generated.UserData) (*
 }
 
 func (h *GRPCHandler) GetUser(ctx context.Context, req *generated.GetDataRequest) (*generated.GetDataResponse, error) {
+	if req == nil || req.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		h.writeLog(ctx, err)
@@ -63,54 +75,75 @@ func (h *GRPCHandler) GetUser(ctx context.Context, req *generated.GetDataRequest
 	return user, nil
 }
 
-func (h *GRPCHandler) UpdateName(ctx context.Context, req *generated.UpdateNameRequest) *generated.GetMessageResponse {
+func (h *GRPCHandler) UpdateName(ctx context.Context, req *generated.UpdateNameRequest) (*generated.GetMessageResponse, error) {
+	if req == nil || req.UserId == "" || (req.FirstName == nil && req.LastName == nil) {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		h.writeLog(ctx, err)
-		return nil
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	schema := schemas.UpdateName{
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 	}
 	user := h.service.UpdateUserName(ctx, userID, schema)
-	return user
+	if !strings.Contains(user.Message.Message, "success") {
+		return nil, status.Error(codes.Internal, user.Message.Message)
+	}
+	return user, nil
 }
 
-func (h *GRPCHandler) UpdatePassword(ctx context.Context, req *generated.UpdatePasswordRequest) *generated.GetMessageResponse {
+func (h *GRPCHandler) UpdatePassword(ctx context.Context, req *generated.UpdatePasswordRequest) (*generated.GetMessageResponse, error) {
+	if req == nil || req.UserId == "" || req.Password == "" {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		h.writeLog(ctx, err)
-		return nil
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	schema := schemas.UpdatePassword{
 		Password: req.Password,
 	}
 	user := h.service.UpdatePassword(ctx, userID, schema)
-	return user
+	if !strings.Contains(user.Message.Message, "success") {
+		return nil, status.Error(codes.Internal, user.Message.Message)
+	}
+	return user, nil
 }
 
-func (h *GRPCHandler) UpdateEmail(ctx context.Context, req *generated.UpdateEmailRequest) *generated.GetMessageResponse {
+func (h *GRPCHandler) UpdateEmail(ctx context.Context, req *generated.UpdateEmailRequest) (*generated.GetMessageResponse, error) {
+	if req == nil || req.UserId == "" || req.Email == "" {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		h.writeLog(ctx, err)
-		return nil
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	schema := schemas.UpdateEmail{
 		Email: req.Email,
 	}
 	user := h.service.UpdateEmail(ctx, userID, schema)
-	return user
+	if !strings.Contains(user.Message.Message, "success") {
+		return nil, status.Error(codes.Internal, user.Message.Message)
+	}
+	return user, nil
 }
 
-func (h *GRPCHandler) RefreshToken(ctx context.Context, req *generated.GetTokenPair) *generated.GetTokenResponse {
+func (h *GRPCHandler) RefreshToken(ctx context.Context, req *generated.GetTokenPair) (*generated.GetTokenResponse, error) {
+	if req == nil || req.UserId == "" || req.Token == nil || req.Token.RefreshToken == "" {
+		return nil, status.Error(codes.InvalidArgument, "user data is required")
+	}
 	userID, err := uuid.Parse(req.UserId)
 	if err != nil {
 		h.writeLog(ctx, err)
-		return nil
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 	token := h.service.RefreshToken(ctx, userID, req.Token.RefreshToken)
-	return token
+	return token, nil
 }
 
 func (h *GRPCHandler) writeLog(ctx context.Context, err error) {
